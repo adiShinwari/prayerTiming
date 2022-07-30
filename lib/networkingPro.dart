@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:prayer_timing/prayer.dart';
 
 class NetworkingProivder extends ChangeNotifier {
-  static const url =
-      'https://api.aladhan.com/v1/timingsByCity?city=peshawar&country=pakistan&method=8';
-  Future fetchDataFromApi() async {
+  Future fetchDataFromApi(String url) async {
     final response = await dio.Dio().get(url);
 
     return response;
@@ -41,8 +39,10 @@ class NetworkingProivder extends ChangeNotifier {
     return time;
   }
 
-  getDataFromApi() async {
-    final response = await fetchDataFromApi();
+  getDataFromApi(String cityName, String CountryName) async {
+    var url =
+        'https://api.aladhan.com/v1/timingsByCity?city=$cityName&country=$CountryName&method=8';
+    final response = await fetchDataFromApi(url);
     Prayer prayer = Prayer(
       asar: convertTimeToAmPmStamp(response.data['data']['timings']['Asr']),
       dhuhr: convertTimeToAmPmStamp(response.data['data']['timings']['Dhuhr']),
