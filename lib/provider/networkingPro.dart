@@ -2,7 +2,7 @@
 
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
-import 'package:prayer_timing/prayer.dart';
+import 'package:prayer_timing/model/prayer.dart';
 
 class NetworkingProivder extends ChangeNotifier {
   Future fetchDataFromApi(String url) async {
@@ -39,7 +39,7 @@ class NetworkingProivder extends ChangeNotifier {
     return time;
   }
 
-  getDataFromApi(String cityName, String CountryName) async {
+  Future getDataFromApi(String cityName, String CountryName) async {
     var url =
         'https://api.aladhan.com/v1/timingsByCity?city=$cityName&country=$CountryName&method=8';
     final response = await fetchDataFromApi(url);

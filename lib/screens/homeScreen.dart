@@ -1,12 +1,13 @@
 // ignore_for_file: file_names, unused_local_variable
 
 import 'package:flutter/material.dart';
-import 'package:geocode/geocode.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:prayer_timing/networkingPro.dart';
+import 'package:prayer_timing/provider/networkingPro.dart';
+import 'package:prayer_timing/provider/widgetProvider.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const routeName = './HomeScreen';
+
   const HomeScreen({
     Key? key,
   }) : super(key: key);
@@ -16,38 +17,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String cityName = '';
-  GeoCode geoCode = GeoCode();
   @override
   void initState() {
-    getLocation(context);
-
     super.initState();
-  }
-
-  getLocation(BuildContext context) async {
-    LocationPermission permission = await Geolocator.requestPermission();
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    // final coordinates = Coordinates(latitude: position.latitude,longitude: position.longitude);
-    var address = await geoCode.reverseGeocoding(
-        latitude: position.latitude, longitude: position.longitude);
-    cityName = address.city!;
-    var countryName = address.countryName;
-    print(position.latitude);
-    callApi(cityName, countryName!);
-  }
-
-  callApi(String cityName, String countryName) async {
-    await Provider.of<NetworkingProivder>(context, listen: false)
-        .getDataFromApi(cityName, countryName);
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context);
-
+    final widgetProvider = Provider.of<WidgetProvider>(
+      context,
+    );
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
@@ -64,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  cityName.isNotEmpty
+                  widgetProvider.getCityName.isNotEmpty
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Container(
@@ -78,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      cityName,
+                                      widgetProvider.getCityName,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 24,
